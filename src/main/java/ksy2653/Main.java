@@ -1,40 +1,25 @@
 package ksy2653;
 
 
-import java.io.*;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int[] A = new int[n];
-        int[] ans = new int[n];
-
-        String[] str = br.readLine().split(" ");
-        for(int i=0;i<n;i++){
-            A[i] = Integer.parseInt(str[i]);
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        Queue<Integer> myQueue = new LinkedList<>();
+        for(int i=1;i<=N;i++){
+            myQueue.add(i);
         }
 
-        Stack<Integer> myStack = new Stack<>();
-        myStack.push(0);
-
-        for(int i=1;i<n;i++){
-            while(!myStack.isEmpty() && A[myStack.peek()] < A[i]){
-                ans[myStack.pop()] = A[i];
-            }
-            myStack.push(i);
-        }
-        while(!myStack.isEmpty()){
-            ans[myStack.pop()] = -1;
+        while(myQueue.size() > 1){
+            myQueue.poll();
+            myQueue.add(myQueue.poll());
         }
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        for(int i=0;i<n;i++){
-            bw.write(ans[i] + " ");
-        }
-        bw.write("\n");
-        bw.flush();
+        System.out.println(myQueue.poll());
     }
 
 }

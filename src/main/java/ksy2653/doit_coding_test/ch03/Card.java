@@ -8,7 +8,7 @@ public class Card {
         Scanner sc = new Scanner(System.in);
         Queue<Integer> myQueue = new LinkedList<>();
         int N = sc.nextInt();
-        for(int i=0;i<N;i++){
+        for(int i=1;i<=N;i++){
             myQueue.add(i);
         }
 
