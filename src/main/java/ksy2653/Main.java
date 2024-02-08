@@ -1,47 +1,40 @@
 package ksy2653;
 
-import java.util.Scanner;
+
+import java.io.*;
 import java.util.Stack;
 
 public class Main {
-    public static void main(String[] args)  {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int[] A = new int[N];
-        for(int i =0;i<A.length;i++){
-            A[i] = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int[] A = new int[n];
+        int[] ans = new int[n];
+
+        String[] str = br.readLine().split(" ");
+        for(int i=0;i<n;i++){
+            A[i] = Integer.parseInt(str[i]);
         }
 
-        Stack<Integer> stack = new Stack<>();
-        StringBuffer bf = new StringBuffer();
-        int num=1;
-        boolean result = true;
-        for(int i=0;i<A.length;i++){
-            int su = A[i];
-            if(su>=num){
-                while(su >= num){
-                    stack.push(num++);
-                    bf.append("+\n");
-                }
-                stack.pop();
-                bf.append("-\n");
+        Stack<Integer> myStack = new Stack<>();
+        myStack.push(0);
+
+        for(int i=1;i<n;i++){
+            while(!myStack.isEmpty() && A[myStack.peek()] < A[i]){
+                ans[myStack.pop()] = A[i];
             }
-            else{
-                if(su != stack.peek()){
-                    System.out.println("NO");
-                    result = false;
-                    break;
-                }
-                else{
-                    stack.pop();
-                    bf.append("-\n");
-                }
-            }
+            myStack.push(i);
+        }
+        while(!myStack.isEmpty()){
+            ans[myStack.pop()] = -1;
         }
 
-        if(result)
-            System.out.println(bf.toString());
-
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        for(int i=0;i<n;i++){
+            bw.write(ans[i] + " ");
+        }
+        bw.write("\n");
+        bw.flush();
     }
 
 }
