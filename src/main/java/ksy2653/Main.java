@@ -1,42 +1,33 @@
 package ksy2653;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        mData[] A = new mData[N];
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String str = sc.next();
+        int[] A = new int[str.length()];
 
-        for(int i=0;i<N;i++){
-            A[i] = new mData((Integer.parseInt(br.readLine())),i);
+        for(int i=0;i<str.length();i++){
+            A[i] = Integer.parseInt(str.substring(i,i+1));
         }
 
-        Arrays.sort(A);
-        int Max=0;
-        for(int i=0;i<N;i++){
-            if(A[i].index - i > Max)
-                Max = A[i].index-i;
+        for(int i=0;i<str.length();i++){
+            int Max=i;
+            for(int j=i+1;j<str.length();j++){
+                if(A[j] > A[Max])
+                    Max = j;
+            }
+            if(A[Max] > A[i]){
+                int temp = A[i];
+                A[i] = A[Max];
+                A[Max] = temp;
+            }
         }
 
-        System.out.println(Max+1);
-    }
-}
-
-class mData implements Comparable<mData> {
-    int value;
-    int index;
-    public mData(int value, int index){
-        super();
-        this.value = value;
-        this.index = index;
-    }
-
-    @Override
-    public int compareTo(mData o){
-        return this.value - o.value;
+        for(int i=0;i<str.length();i++){
+            System.out.print(A[i]);
+        }
     }
 }
