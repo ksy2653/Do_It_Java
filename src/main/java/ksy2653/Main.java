@@ -1,33 +1,23 @@
 package ksy2653;
 
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String str = sc.next();
-        int[] A = new int[str.length()];
+        int N = sc.nextInt();
+        int k = sc.nextInt();
 
-        for(int i=0;i<str.length();i++){
-            A[i] = Integer.parseInt(str.substring(i,i+1));
+        int[] A = new int[N];
+        for(int i=0;i<N;i++){
+            A[i]=sc.nextInt();
         }
+        Arrays.sort(A);
 
-        for(int i=0;i<str.length();i++){
-            int Max=i;
-            for(int j=i+1;j<str.length();j++){
-                if(A[j] > A[Max])
-                    Max = j;
-            }
-            if(A[Max] > A[i]){
-                int temp = A[i];
-                A[i] = A[Max];
-                A[Max] = temp;
-            }
-        }
+        System.out.print(A[k-1]);
 
-        for(int i=0;i<str.length();i++){
-            System.out.print(A[i]);
-        }
+
     }
 }
