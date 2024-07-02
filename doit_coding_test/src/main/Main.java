@@ -1,27 +1,35 @@
 package main;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
 		
-		int N = sc.nextInt();
-		int A[] = new int[N];
-		for(int i=0;i<N;i++) {
-			A[i] = sc.nextInt();
+		int dNum = Integer.parseInt(stringTokenizer.nextToken());
+		int qNum = Integer.parseInt(stringTokenizer.nextToken());
+		
+		long[] S = new long[dNum+1];
+		stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+		
+		for (int i =1 ;i<=dNum; i++) {
+			S[i] = S[i-1] + Integer.parseInt(stringTokenizer.nextToken());
 		}
 		
-		long max =0;
-		long sum=0;
-		for(int i=0;i<N;i++) {
-			if(A[i]>max)
-				max=A[i];
-			sum+=A[i];
+		for(int q =0; q<qNum; q++) {
+			stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+			int i = Integer.parseInt(stringTokenizer.nextToken());
+			int j = Integer.parseInt(stringTokenizer.nextToken());
+			
+			System.out.println(S[j] - S[i-1]);
+			
 		}
-		
-		System.out.println(sum*100.0/max/N);
 	}
-
+	
 }
