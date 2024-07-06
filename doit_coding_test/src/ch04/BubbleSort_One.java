@@ -1,4 +1,4 @@
-package ksy2653.doit_coding_test.ch04;
+package ch04;
 
 import java.io.BufferedReader;
 import java.io.IOException;
