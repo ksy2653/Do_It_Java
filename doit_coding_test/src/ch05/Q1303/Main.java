@@ -47,14 +47,15 @@ public class Main {
 			}
 		}
 		
+		
 		System.out.println(ally + " " + enemy);
 	}
 	
 	public static int bfs(int x, int y) {
-		Queue<int[]> queue = new LinkedList<>();
-		queue.add(new int[]{x,y});
-		visited[x][y] = true;
 		int count=0;
+		Queue<int[]> queue = new LinkedList<>();
+		queue.add(new int[] {x,y});
+		visited[x][y] = true;
 		
 		while(!queue.isEmpty()) {
 			int current[] = queue.poll();
@@ -66,16 +67,15 @@ public class Main {
 				int newX = dx[i] + cx;
 				int newY = dy[i] + cy;
 				
-				if(0<newX && newX<=M && 0<newY && newY<=N && !visited[newX][newY] 
+				if(0<newX && newX <=M && 0<newY && newY<=N && !visited[newX][newY]
 						&& soldiers[newX][newY] == soldiers[cx][cy]) {
-					queue.add(new int[]{newX,newY});
+					queue.add(new int[] {newX, newY});
 					visited[newX][newY] = true;
 				}
 			}
 		}
 		
 		return count;
-		
 	}
 
 }
