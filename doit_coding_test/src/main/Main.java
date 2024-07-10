@@ -1,16 +1,18 @@
 package main;
 
-import java.io.BufferedReader;	
+import java.io.BufferedReader;		
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 //import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int T,N,M,K;
-	static boolean[][] visited, cabbage;
-	static int worm;
+	static int N,M;
+	static boolean[][] visited;
+	static int[][] maze;
 	static int dx[] = {0,0,-1,1};
 	static int dy[] = {-1,1,0,0};
 
@@ -20,47 +22,53 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		//worm_list = new ArrayList<>();
-		T = Integer.parseInt(st.nextToken());
-		for(int i=0;i<T;i++) {
-			worm =0;
-			
-			st = new StringTokenizer(br.readLine());
-			M = Integer.parseInt(st.nextToken());
-			N = Integer.parseInt(st.nextToken());
-			K = Integer.parseInt(st.nextToken());
-			
-			cabbage = new boolean[N][M];
-			visited = new boolean[N][M];
-			
-			for(int j=0;j<K;j++) {
-				st = new StringTokenizer(br.readLine());
-				int x = Integer.parseInt(st.nextToken());
-				int y = Integer.parseInt(st.nextToken());
-				cabbage[y][x] = true;
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		
+		visited = new boolean[N][M];
+		maze = new int[N][M];
+		for(int i=0;i<N;i++) {
+			String line = br.readLine();
+			for(int j=0;j<M;j++) {
+				maze[i][j] = Character.getNumericValue(line.charAt(j));
 			}
-			
-			for(int j=0;j<N;j++) {
-				for(int k=0;k<M;k++) {
-					if(!visited[j][k] && cabbage[j][k]) {
-						worm++;
-						dfs(j,k);
+		}
+		
+		int result = bfs(0,0);
+		System.out.println(result);
+	}
+	
+	
+	public static int bfs(int x, int y) {
+		int depth=1;
+		Queue<int[]> queue = new LinkedList<>();
+		queue.add(new int[] {x,y});
+		visited[x][y] = true;
+		
+		while(!queue.isEmpty()) {
+			int size = queue.size();
+			for(int j=0;j<size;j++) {
+				int current[] = queue.poll();
+				int cx = current[0];
+				int cy = current[1];
+				
+				if(cx == N-1 && cy == M-1)
+					return depth;
+				
+				for(int i=0;i<4;i++) {
+					int newX = dx[i] + cx;
+					int newY = dy[i] + cy;
+					
+					if(0<=newX && newX<N && 0<=newY && newY<M
+							&& !visited[newX][newY] && maze[newX][newY] == 1) {
+						queue.add(new int[] {newX, newY});
+						visited[newX][newY] = true;
 					}
 				}
 			}
-			System.out.println(worm);
+			depth++;
 		}
-	}
-	
-	public static void dfs(int x, int y) {
-		if(visited[x][y] || !cabbage[x][y])
-			return;
-		visited[x][y] = true;
-		for(int i=0;i<4;i++) {
-			int newX = dx[i] + x;
-			int newY = dy[i] + y;
-			if(0<= newX && newX <N && 0<=newY && newY<M && !visited[newX][newY] && cabbage[newX][newY])
-				dfs(newX,newY);
-		}
+		
+		return -1;
 	}
 }
