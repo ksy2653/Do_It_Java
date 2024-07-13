@@ -6,69 +6,80 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 //import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,M;
-	static boolean[][] visited;
-	static int[][] maze;
-	static int dx[] = {0,0,-1,1};
-	static int dy[] = {-1,1,0,0};
-
+	static int M,N,H;
+	static int[][][] tomato;
+	static int[] dx = {0,0,-1,1,0,0};
+	static int[] dy = {-1,1,0,0,0,0};
+	static int[] dz = {0,0,0,0,-1,1};
+	
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		Scanner sc = new Scanner(System.in);
+		M = sc.nextInt();
+		N = sc.nextInt();
+		H = sc.nextInt();
 		
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		tomato = new int[H][N][M];
+		Queue<int[]> queue = new LinkedList<>();
 		
-		visited = new boolean[N][M];
-		maze = new int[N][M];
-		for(int i=0;i<N;i++) {
-			String line = br.readLine();
-			for(int j=0;j<M;j++) {
-				maze[i][j] = Character.getNumericValue(line.charAt(j));
+		for(int i=0;i<H;i++) {
+			for(int j=0;j<N;j++) {
+				for(int k=0;k<M;k++) {
+					tomato[i][j][k] = sc.nextInt();
+					if(tomato[i][j][k] == 1)
+						queue.add(new int[] {i,j,k});
+				}
 			}
 		}
 		
-		int result = bfs(0,0);
-		System.out.println(result);
+		int depth = bfs(queue);
+		
+		for(int i=0;i<H;i++) {
+			for(int j=0;j<N;j++) {
+				for(int k=0;k<M;k++) {
+					if(tomato[i][j][k] == 0)
+						depth = -1;
+				}
+			}
+		}
+		
+		System.out.println(depth);
 	}
 	
 	
-	public static int bfs(int x, int y) {
-		int depth=1;
-		Queue<int[]> queue = new LinkedList<>();
-		queue.add(new int[] {x,y});
-		visited[x][y] = true;
+	public static int bfs(Queue<int[]> queue) {
+		int depth = -1;
 		
 		while(!queue.isEmpty()) {
 			int size = queue.size();
-			for(int j=0;j<size;j++) {
+			for(int i=0;i<size;i++) {
 				int current[] = queue.poll();
-				int cx = current[0];
+				int cx = current[2];
 				int cy = current[1];
+				int cz = current[0];
 				
-				if(cx == N-1 && cy == M-1)
-					return depth;
-				
-				for(int i=0;i<4;i++) {
-					int newX = dx[i] + cx;
-					int newY = dy[i] + cy;
+				for(int j=0;j<6;j++) {
+					int newX = cx + dx[j];
+					int newY = cy + dy[j];
+					int newZ = cz + dz[j];
 					
-					if(0<=newX && newX<N && 0<=newY && newY<M
-							&& !visited[newX][newY] && maze[newX][newY] == 1) {
-						queue.add(new int[] {newX, newY});
-						visited[newX][newY] = true;
+					if (0 <= newX && newX < M && 0 <= newY && newY < N && 0 <= newZ && newZ < H 
+							&& tomato[newZ][newY][newX] == 0) {
+						
+						queue.add(new int[] {newZ,newY,newX});
+						tomato[newZ][newY][newX] = 1;
 					}
 				}
 			}
 			depth++;
 		}
 		
-		return -1;
+		return depth;
 	}
 }
