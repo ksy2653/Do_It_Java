@@ -18,40 +18,47 @@ public class Main {
 		
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int[] A = new int[N];
-		for (int i = 0; i < N; i++) {
-			A[i] = sc.nextInt();
-		}
-		
-		Arrays.sort(A);
-		
 		int M = sc.nextInt();
-		for(int i=0;i<M;i++) {
-			boolean find = false;
-			int target = sc.nextInt();
-			
-			int start=0;
-			int end=A.length-1;
-			
-			while(start<=end) {
-				int midi = (start+end)/2;
-				int midV = A[midi];
-				
-				if(midV > target)
-					end = midi-1;
-				else if(midV < target)
-					start = midi+1;
-				else {
-					find = true;
-					break;
-				}
-			}
-			
-			if(find)
-				System.out.println(1);
-			else
-				System.out.println(0);
+		
+		int[] lecture = new int[N];
+		for (int i = 0; i < N; i++) {
+			lecture[i] = sc.nextInt();
 		}
+		
+		int max=0;
+		int sum=0;
+		
+		for (int i = 0; i < N; i++) {
+			if(lecture[i] > max)
+				max = lecture[i];
+			sum+=lecture[i];
+		}
+		
+		int left = max;
+		int right = sum;
+		
+		while(left<=right) {
+			int mid = (left+right)/2;
+			int count=0;
+			int length=0;
+			
+			for(int i=1;i<N;i++) {
+				if(length + lecture[i] > mid) {
+					count++;
+					length=0;
+				}
+				length+=lecture[i];
+			}
+			if(length!=0)
+				count++;
+			
+			if(count>M)
+				left = mid+1;
+			else
+				right=mid-1;
+		}
+		
+		System.out.println(left);
 	}
 	
 }

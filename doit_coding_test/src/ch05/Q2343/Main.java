@@ -54,9 +54,3 @@ public class Main {
 
 }
 
-/*
- * N M 입력 받기
- * list 배열 만들어서 넣기
- * list 최댓값과 총 합 구하기 -> max, sum -> 초기 binary search의 left, right 설정
- * while 문으로 가보자 -> count == M 일 때 if문 돌려서 ㅇㅋ 
-*/
