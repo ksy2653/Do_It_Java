@@ -23,12 +23,7 @@ public class Main {
 				count += Math.min(num, n);
 			}
 			
-			if(count == k) {
-				start = mid;
-				break;
-			}
-			
-			else if(count > k)
+			if(count >= k)
 				end = mid-1;
 			else
 				start = mid+1;
@@ -39,8 +34,3 @@ public class Main {
 
 }
 
-/*
- * n,k 입력
- * start = 1, end = k
- * count++ for문에서 초기화하면서 돌리기 
- */
