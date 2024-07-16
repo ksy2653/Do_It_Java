@@ -2,7 +2,6 @@ package ch06.Q1715;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -36,12 +35,3 @@ public class Main {
 	}
 
 }
-
-/*
-10 20 40 60 80
-
-10 20
-10 20 40
-10 20 40 60
-10 20 40 60 80
-*/
