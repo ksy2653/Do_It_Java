@@ -37,19 +37,3 @@ public class Main {
 	}
 
 }
-
-/*
-* 수도코드
-* ---------
-* line 입력 받기
-* line.split('-')
-* 다 더해버리기 함수
-* 맨 앞에꺼는 더하고 그 후로는 빼버리기
-* 	
-* sum(string a)
-* {
-* 	sum=0
-* 	a.split(+)
-* 	integer 변환 후 더하기: sum+=integer.dfasfjdsl;
-* }
-*/
