@@ -55,12 +55,12 @@ public class Main {
 			if(count_max < count)
 				count_max = count;
 			
-			for(int i=0;i<N;i++) {
-				for(int j=0;j<N;j++) {
-					if(visited[i][j] == true)
-						visited[i][j] = false;
-				}
-			}
+//			for(int i=0;i<N;i++) {
+//				for(int j=0;j<N;j++) {
+//					if(visited[i][j] == true)
+//						visited[i][j] = false;
+//				}
+//			}
 			
 			rain++;
 		}
