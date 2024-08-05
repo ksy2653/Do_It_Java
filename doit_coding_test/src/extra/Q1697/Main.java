@@ -15,6 +15,10 @@ public class Main {
 		K = sc.nextInt();
 		visited = new int[MAX];
 		
+		for (int i = 0; i < MAX; i++) {
+            visited[i] = -1;
+        }
+		
 		int answer = bfs(N,K);
 		
 		System.out.println(answer);
@@ -36,7 +40,7 @@ public class Main {
 				if(i==end) {
 					return visited[current]+1;
 				}
-				if(visited[i]==0 && i<MAX && i>=0) {
+				if(visited[i]==-1 && i<MAX && i>=0) {
 					visited[i] = visited[current]+1;
 					queue.add(i);
 				}
