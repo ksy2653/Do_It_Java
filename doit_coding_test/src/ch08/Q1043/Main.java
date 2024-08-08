@@ -1,8 +1,5 @@
 package ch08.Q1043;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
 import java.io.*;
 import java.util.StringTokenizer;
 
