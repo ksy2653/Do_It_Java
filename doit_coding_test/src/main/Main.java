@@ -5,69 +5,83 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,M;
-	static int[] parent;
+	static int V,E,K;
+	static int[] distance;
+	static boolean[] visited;
+	static ArrayList<Edge>[] list;
+	static PriorityQueue<Edge> q;
 	
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		M = sc.nextInt();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		parent = new int[N+1];
-		for(int i=0;i<=N;i++) {
-			parent[i]=i;
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(br.readLine());
+		
+		distance = new int[V+1];
+		visited = new boolean[V+1];
+		list = new ArrayList[V+1];
+	
+		for(int i=1;i<=V;i++) {
+			distance[i] = Integer.MAX_VALUE;
+			list[i] = new ArrayList<Edge>();
 		}
 		
-		for(int i=0;i<M;i++) {
-			int question = sc.nextInt();
-			int a = sc.nextInt();
-			int b= sc.nextInt();
+		for(int i=0;i<E;i++) {
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int u = Integer.parseInt(st.nextToken());
+			int v = Integer.parseInt(st.nextToken());
 			
-			if(question==0)
-				union(a,b);
-			else {
-				if(checkSame(a,b))
-					System.out.println("YES");
-				else
-					System.out.println("NO");
+			list[s].add(new Edge(u,v));
+		}
+		
+		distance[K]=0;
+		q = new PriorityQueue<Edge>();
+		q.add(new Edge(K,0));
+		
+		while(!q.isEmpty()) {
+			Edge current = q.poll();
+			int cur_vertex = current.vertex;
+			if(visited[cur_vertex])
+				continue;
+			visited[cur_vertex] = true;
+			
+			for(Edge temp: list[cur_vertex]) {
+				int next = temp.vertex;
+				int value = temp.value;
+				
+				distance[next] = Math.min(distance[next], distance[cur_vertex] + value);
+				q.add(new Edge(next,distance[next]));
 			}
 		}
 		
-	}
-	
-	public static void union(int a, int b) {
-		a = find(a);
-		b = find(b);
-		
-		if(a!=b) {
-			parent[b]=a;
+		for(int i=1;i<=V;i++) {
+			if(visited[i])
+				System.out.println(distance[i]);
+			else
+				System.out.println("INF");
 		}
 	}
+}
+
+class Edge implements Comparable<Edge>{
+	int vertex;
+	int value;
 	
-	public static int find(int a) {
-		if(a == parent[a])
-			return parent[a];
-		else 
-			return parent[a] = find(parent[a]);
+	public Edge(int vertex, int value) {
+		this.vertex = vertex;
+		this.value = value;
 	}
 	
-	public static boolean checkSame(int a, int b) {
-		a = find(a);
-		b = find(b);
-		
-		if(a==b)
-			return true;
-		else
-			return false;
+	public int compareTo(Edge e) {
+		return this.value - e.value;
 	}
-	
-	
 }
