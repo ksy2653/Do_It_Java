@@ -26,8 +26,8 @@ public class Main {
 			distance[i]=i;
 		}
 		
-		list = new ArrayList[D+1];
-		for(int i=0;i<=D;i++) {
+		list = new ArrayList[10001];
+		for(int i=0;i<=10000;i++) {
 			list[i] = new ArrayList<>();
 		}
 		
