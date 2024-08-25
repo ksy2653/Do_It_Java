@@ -12,8 +12,8 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,M;
-	static long[] distance;
+	static int N,M,sCity,eCity;
+	static long distance[], cityMoney[];
 	static Edge[] edges;
 
 	public static void main(String[] args) throws IOException {
@@ -23,61 +23,69 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		N = Integer.parseInt(st.nextToken());
+		sCity = Integer.parseInt(st.nextToken());
+		eCity = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
-		edges = new Edge[M+1];
-		distance = new long[N+1];
-		Arrays.fill(distance, Integer.MAX_VALUE);
+		edges = new Edge[M];
+		distance = new long[N];
+		cityMoney = new long[N];
+		
+		Arrays.fill(distance, Long.MIN_VALUE);
 		
 		for(int i=0;i<M;i++) {
 			st = new StringTokenizer(br.readLine());
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
-			int time = Integer.parseInt(st.nextToken());
+			int price = Integer.parseInt(st.nextToken());
 			
-			edges[i] = new Edge(start,end,time);
+			edges[i] = new Edge(start,end,price);
 		}
 		
-		//Bellman ford algorithm
-		distance[1]=0;
-		for(int i=1;i<N;i++) {
+		st = new StringTokenizer(br.readLine());
+		for(int i=0;i<N;i++) {
+			cityMoney[i] = Integer.parseInt(st.nextToken());
+		}
+		
+		distance[sCity] = cityMoney[sCity];
+		for(int i=0;i<N+100;i++) {
 			for(int j=0;j<M;j++) {
 				Edge edge = edges[j];
-				if(distance[edge.start] != Integer.MAX_VALUE && 
-						distance[edge.end] > distance[edge.start] + edge.time)
-					distance[edge.end] = distance[edge.start] + edge.time;
+				int start = edge.start;
+				int end = edge.end;
+				int price = edge.price;
+				
+				if(distance[start] == Long.MIN_VALUE)
+					continue;
+				else if(distance[start] == Long.MAX_VALUE)
+					distance[end] = Long.MAX_VALUE;
+				else if(distance[end] < distance[start] + cityMoney[end] - price){
+						distance[end] = distance[start] + cityMoney[end] - price;
+						
+						if(i>=N-1)
+							distance[end] = Long.MAX_VALUE;
+					}
+				}
 			}
-		}
 		
-		boolean isNCycle = false;
-		for(int i=0;i<M;i++) {
-			Edge edge = edges[i];
-			if(distance[edge.start] != Integer.MAX_VALUE && 
-					distance[edge.end] > distance[edge.start] + edge.time)
-				isNCycle = true;
-		}
-		
-		if(!isNCycle) {
-			for(int i=2;i<=N;i++) {
-				if(distance[i] == Integer.MAX_VALUE)
-					System.out.println(-1);
-				else
-					System.out.println(distance[i]);
-			}
-		}
+		if(distance[eCity] == Long.MIN_VALUE)
+			System.out.println("gg");
+		else if(distance[eCity] == Long.MAX_VALUE)
+			System.out.println("Gee");
 		else
-			System.out.println(-1);
+			System.out.println(distance[eCity]);
+		
 	}
 		
 }
 
 class Edge{
-	int start,end,time;
+	int start,end,price;
 
-	public Edge(int start, int end, int time) {
+	public Edge(int start, int end, int price) {
 		this.start = start;
 		this.end = end;
-		this.time = time;
+		this.price = price;
 	}
 	
 }
