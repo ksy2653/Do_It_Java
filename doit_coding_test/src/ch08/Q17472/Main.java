@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
-import java.util.concurrent.LinkedTransferQueue;
 
 public class Main {
 	static int[] dr = {-1,0,1,0};
