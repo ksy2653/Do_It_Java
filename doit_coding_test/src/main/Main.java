@@ -9,83 +9,74 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.PriorityQueue;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,M,sCity,eCity;
-	static long distance[], cityMoney[];
-	static Edge[] edges;
+	static int N,M;
+	static int[] parent;
+	static PriorityQueue<Edge> pq;
 
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+		M = sc.nextInt();
 		
-		N = Integer.parseInt(st.nextToken());
-		sCity = Integer.parseInt(st.nextToken());
-		eCity = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		parent = new int[N+1];
+		for(int i=1;i<=N;i++) {
+			parent[i]=i;
+		}
 		
-		edges = new Edge[M];
-		distance = new long[N];
-		cityMoney = new long[N];
-		
-		Arrays.fill(distance, Long.MIN_VALUE);
-		
+		pq = new PriorityQueue<>();
 		for(int i=0;i<M;i++) {
-			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int end = Integer.parseInt(st.nextToken());
-			int price = Integer.parseInt(st.nextToken());
+			int s = sc.nextInt();
+			int e = sc.nextInt();
+			int v = sc.nextInt();
 			
-			edges[i] = new Edge(start,end,price);
+			pq.add(new Edge(s,e,v));
 		}
 		
-		st = new StringTokenizer(br.readLine());
-		for(int i=0;i<N;i++) {
-			cityMoney[i] = Integer.parseInt(st.nextToken());
-		}
-		
-		distance[sCity] = cityMoney[sCity];
-		for(int i=0;i<N+100;i++) {
-			for(int j=0;j<M;j++) {
-				Edge edge = edges[j];
-				int start = edge.start;
-				int end = edge.end;
-				int price = edge.price;
-				
-				if(distance[start] == Long.MIN_VALUE)
-					continue;
-				else if(distance[start] == Long.MAX_VALUE)
-					distance[end] = Long.MAX_VALUE;
-				else if(distance[end] < distance[start] + cityMoney[end] - price){
-						distance[end] = distance[start] + cityMoney[end] - price;
-						
-						if(i>=N-1)
-							distance[end] = Long.MAX_VALUE;
-					}
-				}
+		int result=0;
+		for(int i=0;i<N-1;i++) {
+			Edge now = pq.poll();
+			if(find(now.start) != find(now.end)) {
+				union(now.start, now.end);
+				result += now.weight;
 			}
+		}
 		
-		if(distance[eCity] == Long.MIN_VALUE)
-			System.out.println("gg");
-		else if(distance[eCity] == Long.MAX_VALUE)
-			System.out.println("Gee");
-		else
-			System.out.println(distance[eCity]);
-		
+		System.out.println(result);
 	}
+	
+	public static void union(int a, int b) {
+		a = find(a);
+		b = find(b);
 		
+		if(a!=b)
+			parent[b] = a;
+	}
+	
+	public static int find(int a) {
+		if(a==parent[a])
+			return a;
+		else
+			return parent[a] = find(parent[a]);
+	}
 }
 
-class Edge{
-	int start,end,price;
+class Edge implements Comparable<Edge>{
+	int start,end,weight;
 
-	public Edge(int start, int end, int price) {
+	public Edge(int start, int end, int weight) {
 		this.start = start;
 		this.end = end;
-		this.price = price;
+		this.weight = weight;
+	}
+	
+	public int compareTo(Edge e) {
+		return weight - e.weight;
 	}
 	
 }

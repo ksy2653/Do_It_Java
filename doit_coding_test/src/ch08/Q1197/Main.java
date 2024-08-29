@@ -18,7 +18,7 @@ public class Main {
 		
 		queue = new PriorityQueue<>();
 		parent = new int[N+1];
-		for(int i=0;i<N;i++) {
+		for(int i=0;i<=N;i++) {
 			parent[i]=i;
 		}
 		
