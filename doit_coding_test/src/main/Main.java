@@ -13,54 +13,33 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,deleteNode,result;
-	static boolean[] visited;
-	static ArrayList<Integer> tree[];
 
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
 		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		visited = new boolean[N];
-		tree = new ArrayList[N];
 		
-		for(int i=0;i<N;i++) {
-			tree[i] = new ArrayList<>();
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		
+		String dic[] = new String[n];
+		for(int i=0;i<n;i++) {
+			dic[i] = sc.next();
 		}
 		
-		int root=0;
-		for(int i=0;i<N;i++) {
-			int p = sc.nextInt();
-			if(p!=-1) {
-				tree[p].add(i);
-				tree[i].add(p);
+		int count=0;
+		for(int i=0;i<m;i++) {
+			String text = sc.next();
+			for(int j=0;j<n;j++) {
+				if(dic[j].equals(text)) {
+					count++;
+					break;
+				}
 			}
-			else
-				root=i;
 		}
 		
-		deleteNode = sc.nextInt();
-		if(deleteNode == root)
-			System.out.println(0);
-		else {
-			dfs(root);
-			System.out.println(result);
-		}
+		System.out.println(count);
 			
 	}
 	
-	public static void dfs(int n) {
-		visited[n] = true;
-		int cNode = 0;
-		for(int i:tree[n]) {
-			if(visited[i] == false && i != deleteNode) {
-				cNode++;
-				dfs(i);
-			}
-		}
-		
-		if(cNode==0)
-			result++;
-	}
 }
