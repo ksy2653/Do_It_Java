@@ -13,70 +13,54 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,M;
-	static int[] parent;
-	static PriorityQueue<Edge> pq;
+	static int N,deleteNode,result;
+	static boolean[] visited;
+	static ArrayList<Integer> tree[];
 
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
-		M = sc.nextInt();
+		visited = new boolean[N];
+		tree = new ArrayList[N];
 		
-		parent = new int[N+1];
-		for(int i=1;i<=N;i++) {
-			parent[i]=i;
+		for(int i=0;i<N;i++) {
+			tree[i] = new ArrayList<>();
 		}
 		
-		pq = new PriorityQueue<>();
-		for(int i=0;i<M;i++) {
-			int s = sc.nextInt();
-			int e = sc.nextInt();
-			int v = sc.nextInt();
+		int root=0;
+		for(int i=0;i<N;i++) {
+			int p = sc.nextInt();
+			if(p!=-1) {
+				tree[p].add(i);
+				tree[i].add(p);
+			}
+			else
+				root=i;
+		}
+		
+		deleteNode = sc.nextInt();
+		if(deleteNode == root)
+			System.out.println(0);
+		else {
+			dfs(root);
+			System.out.println(result);
+		}
 			
-			pq.add(new Edge(s,e,v));
-		}
-		
-		int result=0;
-		for(int i=0;i<N-1;i++) {
-			Edge now = pq.poll();
-			if(find(now.start) != find(now.end)) {
-				union(now.start, now.end);
-				result += now.weight;
+	}
+	
+	public static void dfs(int n) {
+		visited[n] = true;
+		int cNode = 0;
+		for(int i:tree[n]) {
+			if(visited[i] == false && i != deleteNode) {
+				cNode++;
+				dfs(i);
 			}
 		}
 		
-		System.out.println(result);
+		if(cNode==0)
+			result++;
 	}
-	
-	public static void union(int a, int b) {
-		a = find(a);
-		b = find(b);
-		
-		if(a!=b)
-			parent[b] = a;
-	}
-	
-	public static int find(int a) {
-		if(a==parent[a])
-			return a;
-		else
-			return parent[a] = find(parent[a]);
-	}
-}
-
-class Edge implements Comparable<Edge>{
-	int start,end,weight;
-
-	public Edge(int start, int end, int weight) {
-		this.start = start;
-		this.end = end;
-		this.weight = weight;
-	}
-	
-	public int compareTo(Edge e) {
-		return weight - e.weight;
-	}
-	
 }
