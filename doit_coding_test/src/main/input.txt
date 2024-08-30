@@ -1,19 +1,12 @@
-5 11
-baekjoononlinejudge
-startlink
-codeplus
-sundaycoding
-codingsh
-baekjoon
-codeplus
-codeminus
-startlink
-starlink
-sundaycoding
-codingsh
-codinghs
-sondaycoding
-startrink
-icerink
+7
+A B C
+B D .
+C E F
+E . .
+F . G
+D . .
+G . .
 
-4
+ABDCEFG
+DBAECFG
+DBEGFCA
