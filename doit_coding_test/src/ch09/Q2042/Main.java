@@ -37,9 +37,9 @@ public class Main {
 		setTree(treeSize-1);
 		for(int i=0;i<M+K;i++) {
 			st = new StringTokenizer(br.readLine());
-			long a = Integer.parseInt(st.nextToken());
+			long a = Long.parseLong(st.nextToken());
 			int s = Integer.parseInt(st.nextToken());
-			long e = Integer.parseInt(st.nextToken());
+			long e = Long.parseLong(st.nextToken());
 			
 			if(a==1) {
 				changeVal(leftNodeStartIndex+s,e);

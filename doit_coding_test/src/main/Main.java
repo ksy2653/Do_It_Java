@@ -13,63 +13,89 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int[][] tree;
+	static long[] tree;
 
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
-		Scanner sc = new Scanner(System.in);
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int n = sc.nextInt();
-		sc.nextLine();
-		tree = new int[26][2];
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
 		
-		for(int i=0;i<n;i++) {
-			String[] temp = sc.nextLine().split(" ");
-			int node = temp[0].charAt(0) - 'A';
-			char left = temp[1].charAt(0);
-			char right = temp[2].charAt(0);
-			
-			if(left == '.')
-				tree[node][0] = -1;
-			else
-				tree[node][0] = left - 'A';
-			if(right == '.')
-				tree[node][1] = -1;
-			else
-				tree[node][1] = right - 'A';
+		int treeHeight=0;
+		int length=N;
+		while(length>0) {
+			treeHeight++;
+			length/=2;
 		}
 		
-		preOrder(0);
-		System.out.println();
-		InOrder(0);
-		System.out.println();
-		postOrder(0);
-		System.out.println();
+		int treeSize = (int)Math.pow(2, treeHeight+1);
+		int leftNodeStartIndex = (int)treeSize/2;
+		
+		tree = new long[treeSize];
+		for(int i=leftNodeStartIndex;i<leftNodeStartIndex+N;i++) {
+			tree[i] = Long.parseLong(br.readLine());
+		}
+		
+		setTree(treeSize-1);
+		
+		for(int i=0;i<M+K;i++) {
+			st = new StringTokenizer(br.readLine());
+			long a = Long.parseLong(st.nextToken());
+			int s = Integer.parseInt(st.nextToken());
+			long e = Long.parseLong(st.nextToken());
+			
+			if(a == 1) {
+				s = s + leftNodeStartIndex - 1;
+				changeVal(s,e);
+			}
+			else if(a==2) {
+				s = s + leftNodeStartIndex - 1;
+				e = e + leftNodeStartIndex - 1;
+				System.out.println(getSum(s,(int)e));
+			}
+				
+			else
+				return;
+			
+		}
 	}
 	
-	public static void preOrder(int now) {
-		if(now == -1)
-			return;
-		System.out.print((char)(now+'A'));
-		preOrder(tree[now][0]);
-		preOrder(tree[now][1]);
+	private static long getSum(int s, int e) {
+		long partSum=0;
+		while(s<=e) {
+			if(s % 2 == 1) {
+				partSum = partSum + tree[s];
+				s++;
+			}
+			if(e % 2 == 0) {
+				partSum = partSum + tree[e];
+				e--;
+			}
+			
+			s /=2;
+			e /=2;
+		}
+		
+		return partSum;
 	}
 	
-	public static void InOrder(int now) {
-		if(now == -1)
-			return;
-		InOrder(tree[now][0]);
-		System.out.print((char)(now+'A'));
-		InOrder(tree[now][1]);
+	private static void changeVal(int index, long val) {
+		long diff = val - tree[index];
+		while(index>0) {
+			tree[index] += diff;
+			index /=2;
+		}
 	}
 	
-	public static void postOrder(int now) {
-		if(now == -1)
-			return;
-		postOrder(tree[now][0]);
-		postOrder(tree[now][1]);
-		System.out.print((char)(now+'A'));
+	private static void setTree(int i) {
+		while(i!=1) {
+			tree[i/2] += tree[i];
+			i--;
+		}
 	}
 	
 }
