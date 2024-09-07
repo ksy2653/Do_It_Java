@@ -1,5 +1,5 @@
 # Do_It_Java
-Do It! 알고리즘 코딩 테스트 교재 코드
+Do It! 알고리즘 코딩 테스트
 
 ## IDE
 Eclipse IDE
@@ -9,4 +9,4 @@ Eclipse IDE
 - At least one commit for one day
 
 ## Descriptions about questions
-Link: https://www.notion.so/c63836923c02446caf6c9bcff59af62a?pvs=4
+Link: [https://www.notion.so/c63836923c02446caf6c9bcff59af62a?pvs=4](https://incredible-goldenrod-1c0.notion.site/c63836923c02446caf6c9bcff59af62a?pvs=4)
