@@ -8,93 +8,98 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-	static long[] tree;
+	static ArrayList<Integer>[] tree;
+	static int[] parent,depth;
+	static boolean[] visited;
 
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();
 		
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		
-		int treeHeight=0;
-		int length=N;
-		while(length>0) {
-			treeHeight++;
-			length/=2;
+		parent = new int[N+1];
+		depth = new int[N+1];
+		visited = new boolean[N+1];
+		tree = new ArrayList[N+1];
+		for(int i=1;i<=N;i++) {
+			tree[i] = new ArrayList<>();
 		}
 		
-		int treeSize = (int)Math.pow(2, treeHeight+1);
-		int leftNodeStartIndex = (int)treeSize/2;
-		
-		tree = new long[treeSize];
-		for(int i=leftNodeStartIndex;i<leftNodeStartIndex+N;i++) {
-			tree[i] = Long.parseLong(br.readLine());
-		}
-		
-		setTree(treeSize-1);
-		
-		for(int i=0;i<M+K;i++) {
-			st = new StringTokenizer(br.readLine());
-			long a = Long.parseLong(st.nextToken());
-			int s = Integer.parseInt(st.nextToken());
-			long e = Long.parseLong(st.nextToken());
+		for(int i=0;i<N-1;i++) {
+			int s = sc.nextInt();
+			int e = sc.nextInt();
 			
-			if(a == 1) {
-				s = s + leftNodeStartIndex - 1;
-				changeVal(s,e);
-			}
-			else if(a==2) {
-				s = s + leftNodeStartIndex - 1;
-				e = e + leftNodeStartIndex - 1;
-				System.out.println(getSum(s,(int)e));
-			}
-				
-			else
-				return;
-			
+			tree[s].add(e);
+			tree[e].add(s);
 		}
+		
+		bfs(1);
+		
+		int M = sc.nextInt();
+		for(int i=0;i<M;i++) {
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			int LCA = excuteLCA(a,b);
+			
+			System.out.println(LCA);
+		}
+		
 	}
 	
-	private static long getSum(int s, int e) {
-		long partSum=0;
-		while(s<=e) {
-			if(s % 2 == 1) {
-				partSum = partSum + tree[s];
-				s++;
-			}
-			if(e % 2 == 0) {
-				partSum = partSum + tree[e];
-				e--;
-			}
-			
-			s /=2;
-			e /=2;
+	public static int excuteLCA(int a, int b) {
+		if(depth[a] < depth[b]) {
+			int temp = a;
+			a = b;
+			b = temp;
 		}
 		
-		return partSum;
-	}
-	
-	private static void changeVal(int index, long val) {
-		long diff = val - tree[index];
-		while(index>0) {
-			tree[index] += diff;
-			index /=2;
+		while(depth[a] != depth[b]) {
+			a = parent[a];
 		}
+		
+		while(a!=b) {
+			a = parent[a];
+			b = parent[b];
+		}
+		
+		return a;
 	}
 	
-	private static void setTree(int i) {
-		while(i!=1) {
-			tree[i/2] += tree[i];
-			i--;
+	public static void bfs(int node) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(node);
+		visited[node] = true;
+		
+		int count=0;
+		int level=1;
+		int node_count=1;
+		
+		while(!queue.isEmpty()) {
+			int now_node = queue.poll();
+			for(int next:tree[now_node]) {
+				if(!visited[next]) {
+					visited[next]=true;
+					queue.add(next);
+					parent[next] = now_node;
+					depth[next] = level;
+				}
+			}
+			
+			count++;
+			
+			if(count==node_count) {
+				count=0;
+				level++;
+				node_count = queue.size();
+			}
 		}
 	}
 	
