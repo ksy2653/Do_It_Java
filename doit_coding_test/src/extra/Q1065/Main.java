@@ -1,6 +1,5 @@
 package extra.Q1065;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
