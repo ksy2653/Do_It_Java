@@ -16,37 +16,59 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static ArrayList<Integer>[] tree;
-	static int[] parent,depth;
+	static int[] depth;
 	static boolean[] visited;
+	static int[][] parent;
+	static int kmax;
 
 	public static void main(String[] args) throws IOException {
 		System.setIn(new FileInputStream("src/main/input.txt"));
 		
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 		
-		parent = new int[N+1];
+		int N = Integer.parseInt(br.readLine());
+		tree = new ArrayList[N+1];
 		depth = new int[N+1];
 		visited = new boolean[N+1];
-		tree = new ArrayList[N+1];
+		
 		for(int i=1;i<=N;i++) {
 			tree[i] = new ArrayList<>();
 		}
 		
 		for(int i=0;i<N-1;i++) {
-			int s = sc.nextInt();
-			int e = sc.nextInt();
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int e = Integer.parseInt(st.nextToken());
 			
 			tree[s].add(e);
 			tree[e].add(s);
 		}
 		
+		int temp=1;
+		kmax=0;
+		while(temp<=N) {
+			temp<<=1;
+			kmax++;
+		}
+		
+		parent = new int[kmax+1][N+1];
+		
 		bfs(1);
 		
-		int M = sc.nextInt();
+		for(int k=1;k<=kmax;k++) {
+			for(int n=1;n<=N;n++) {
+				parent[k][n] = parent[k-1][parent[k-1][n]];
+			}
+		}
+		
+		
+		int M = Integer.parseInt(br.readLine());
 		for(int i=0;i<M;i++) {
-			int a = sc.nextInt();
-			int b = sc.nextInt();
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			
 			int LCA = excuteLCA(a,b);
 			
 			System.out.println(LCA);
@@ -61,16 +83,27 @@ public class Main {
 			b = temp;
 		}
 		
-		while(depth[a] != depth[b]) {
-			a = parent[a];
+		for(int k=kmax;k>=0;k--) {
+			if(Math.pow(2, k) <= depth[a] - depth[b]) {
+				if(depth[b] <= depth[parent[k][a]]) {
+					a = parent[k][a];
+				}
+			}
 		}
 		
-		while(a!=b) {
-			a = parent[a];
-			b = parent[b];
+		for(int k=kmax;k>=0;k--) {
+			if(parent[k][a] != parent[k][b]) {
+				a = parent[k][a];
+				b = parent[k][b];
+			}
 		}
 		
-		return a;
+		int LCA = a;
+		if(a!=b) {
+			LCA = parent[0][LCA];
+		}
+		
+		return LCA;
 	}
 	
 	public static void bfs(int node) {
@@ -78,27 +111,27 @@ public class Main {
 		queue.add(node);
 		visited[node] = true;
 		
-		int count=0;
 		int level=1;
-		int node_count=1;
+		int node_size=1;
+		int count=0;
 		
 		while(!queue.isEmpty()) {
-			int now_node = queue.poll();
+			int now_node=queue.poll();
 			for(int next:tree[now_node]) {
 				if(!visited[next]) {
 					visited[next]=true;
 					queue.add(next);
-					parent[next] = now_node;
+					parent[0][next] = now_node;
 					depth[next] = level;
 				}
 			}
 			
 			count++;
 			
-			if(count==node_count) {
+			if(count==node_size) {
 				count=0;
+				node_size = queue.size();
 				level++;
-				node_count = queue.size();
 			}
 		}
 	}
