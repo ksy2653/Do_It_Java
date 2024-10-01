@@ -8,7 +8,6 @@ public class Solution {
 	static ArrayList<String> list[];
 	static String[] new_words;
 	static boolean[] visited;
-	static int depth=0;
 
 	public static void main(String[] args) {
 		String begin = "hit";
